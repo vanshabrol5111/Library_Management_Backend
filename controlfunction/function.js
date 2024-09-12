@@ -22,7 +22,7 @@ async function postBook(req,res) {
      const bookData = await libraryBook.create({
          title : title,
          author : author,
-         isBorrowed : false,
+        //  isBorrowed : false,
      })
  
      res.status(200).json({
@@ -84,7 +84,7 @@ async function postBook(req,res) {
 
         async function deleteBook(req, res) {
             try {
-              const { id } = req.params;
+              const { id} = req.body;
           
               if (!id) {
                 return res.status(400).json({
@@ -111,6 +111,28 @@ async function postBook(req,res) {
               });
             }
           }
+          async function patchBook(req,res)
+          {
+            try {
+              
+              const {id}= req.body
+              const {isBorrowed}=req.body
+            const book = await libraryBook.findById(id);
+       
+          
+            if (!book) {
+              return res.status(404).json({ message: 'Book not found' });
+            }
+        book.isBorrowed = isBorrowed;
+     
+            await book.save();
+            res.json(book);
+          } catch (err) {
+            res.status(500).json({ message: err.message });
+          }
+
+
+          }
           
 
- module.exports={postBook,getBook,putBook,deleteBook}
+ module.exports={postBook,getBook,putBook,deleteBook,patchBook}

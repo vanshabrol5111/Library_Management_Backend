@@ -2,8 +2,9 @@ const express=require("express");
 const app=express();
 const bodyparser=require("body-parser");
 const  mongoose  = require("mongoose");
+const cors = require("cors")
 app.use(bodyparser.json());
-
+app.use(cors());
 require("dotenv").config();
 const mongoUrl=process.env.MONGODB;
 const router =require("./route")

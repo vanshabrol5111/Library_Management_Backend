@@ -11,7 +11,8 @@ author:{
     type:String,
 },
 isBorrowed :{
-    type : Boolean,
+    type : Boolean, 
+    default:false
 }
 
 })
