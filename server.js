@@ -8,6 +8,13 @@ app.use(cors());
 require("dotenv").config();
 const mongoUrl=process.env.MONGODB;
 const router =require("./route")
+
+app.get('/home',(req,res)=> {
+     return res.json({
+        msg: 'home route'
+     })
+    
+})
 app.use('/api',router)
 mongoose.connect(mongoUrl).then(()=>{
     console.log("database connected");
@@ -17,7 +24,7 @@ mongoose.connect(mongoUrl).then(()=>{
     
 })
 
-const PORT=process.env.PORT || 8000;
+const PORT=process.env.PORT || 4000;
 app.listen(process.env.PORT,()=>
 {
     console.log(`Server started at Port:${PORT}`)

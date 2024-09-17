@@ -40,6 +40,9 @@ async function postBook(req,res) {
  
 
     async function getBook(req,res){
+
+         console.log('calledd');
+         
         const bookk= await  libraryBook.find();
         if(bookk) {
            return res.json({
@@ -48,43 +51,77 @@ async function postBook(req,res) {
              })
         } else {
            return res.json({
-               msg: 'product  not  fetched',
+               msg: 'book not  fetched',
              })
         }
    
     }
 
 
-   // app.put("/product/:id",//  
-   async function putBook(req,res){
+  //  // app.put("/product/:id",//  
+  //  async function putBook(req,res){
    
-        // const id= req.params.id;
+  //       // const id= req.params.id;
        
-            try {
+  //           try {
               
-                const {id,title,author}= req.body
-              const book = await libraryBook.findById(id);
+  //               const {id,title,author}= req.body
+  //             const book = await libraryBook.findById(id);
          
-              console.log("apple");
-              if (!book) {
-                return res.status(404).json({ message: 'Book not found' });
-              }
-          book.title = title;
-          book.author = author;
-              await book.save();
-              res.json(book);
-            } catch (err) {
-              res.status(500).json({ message: err.message });
-            }
+  //             console.log("apple");
+  //             if (!book) {
+  //               return res.status(404).json({ message: 'Book not found' });
+  //             }
+  //         book.title = title;
+  //         book.author = author;
+  //             await book.save();
+  //             res.json(book);
+  //           } catch (err) {
+  //             res.status(500).json({ message: err.message });
+  //           }
+  //       }
+  async function putBook(req,res) {
+    try{
+        const {id} = req.body; 
+        const{title,author} = req.body;
+        if(!title || !author )
+        {
+            return res.status(400).json({
+                message:"Enter all details"
+            })
         }
+        const bookData = await libraryBook.findByIdAndUpdate({_id : id},{
+            title : title,
+            author : author,
+           
     
-          
+        })
+    
+        res.status(200).json({
+            message :"Data Updated Successfully",
+            book : bookData 
+        })
+    }
+    catch (err){
+        res.status(500).json({
+            message :"Error Updating Data",
+           error : err
+        })
+    }
+}
+
+  
           
     
 
         async function deleteBook(req, res) {
+
+          console.log("hiytt");
+          
             try {
               const { id} = req.body;
+              console.log(id);
+              
           
               if (!id) {
                 return res.status(400).json({
@@ -103,36 +140,79 @@ async function postBook(req,res) {
               res.status(200).json({
                 message: "Data Deleted Successfully",
                 book: bookData,
+                success: true
               });
             } catch (err) {
               console.error(err); // Log the error for debugging
               res.status(500).json({
                 message: "Data Deletion Failed",
+                success: false
               });
             }
           }
-          async function patchBook(req,res)
-          {
-            try {
+        // async function deleteBook(req,res) {
+        //   try{
+        //     const {id} = req.body
+        
+        //     const bookData = await libraryBook.findByIdAndDelete ({_id:id})
+        
+        //     res.status(200).json({
+        //         message :"Data Deleted Successfully",
+        //         book : bookData 
+        //     })
+        //   }
+        //   catch (err){
+        //     res.status(500).json({
+        //         message :"Data Deletion Failed",
+        //         book : bookData 
+        //     })
+        //   }
+        // }
+        
+        //   async function patchBook(req,res)
+        //   {
+        //     try {
               
-              const {id}= req.body
-              const {isBorrowed}=req.body
-            const book = await libraryBook.findById(id);
+        //       const {id}= req.body
+        //       const {isBorrowed}=req.body
+        //     const book = await libraryBook.findById(id);
        
-          
-            if (!book) {
-              return res.status(404).json({ message: 'Book not found' });
-            }
-        book.isBorrowed = isBorrowed;
+        //   console.log("appl",id)
+        //     if (!book) {
+        //       return res.status(404).json({ message: 'Book not found' });
+        //     }
+        // book.isBorrowed = isBorrowed;
      
-            await book.save();
-            res.json(book);
-          } catch (err) {
-            res.status(500).json({ message: err.message });
-          }
+        //     await book.save();
+        //     res.json(book);
+        //   } catch (err) {
+        //     res.status(500).json({ message: err.message });
+        //   }
 
 
+        //   }
+        async function patchBook(req,res) {
+
+          try{
+            const {id} = req.body
+            const{isBorrowed} = req.body;
+        
+            const bookData = await libraryBook.findByIdAndUpdate({_id:id},{
+                isBorrowed:isBorrowed
+            })
+        
+            res.status(200).json({
+                message :"Data Updated Successfully",
+                book : bookData 
+            })
           }
+          catch (err){
+            res.status(500).json({
+                message :"Error Updating Book status",
+               error :err
+      })
+        }
+        }
           
 
  module.exports={postBook,getBook,putBook,deleteBook,patchBook}
